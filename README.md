@@ -1,4 +1,4 @@
-# <!-- TOC -->
+<!-- TOC -->
 
 - [Python 学习笔记](#python-学习笔记)
   - [第一章 Python 概述](#第一章-python-概述)
@@ -10,6 +10,10 @@
       - [2.2.1 单分支结构](#221-单分支结构)
       - [2.2.2 多分支结构](#222-多分支结构)
       - [2.2.3 多分支结构](#223-多分支结构)
+    - [2.3 循环结构](#23-循环结构)
+      - [2.3.1 while 语句](#231-while-语句)
+      - [2.3.2 for 循环语句](#232-for-循环语句)
+      - [2.3.3 循环的嵌套](#233-循环的嵌套)
 
 <!-- /TOC -->
 
@@ -285,4 +289,205 @@ elif s.isalpha() is True:
     print(s.capitalize())
 else:
     print(len(s))
+```
+
+### 2.3 循环结构
+
+在 python 中是没有 do while 的
+
+#### 2.3.1 while 语句
+
+> 例 2.7 假设程序运行时，需要输入密码，如果密码正确，显示“欢迎使用本系统”，否则，显示“c”，知道密码输入正确，结束程序。(密码设为:admin2021)
+
+```
+password = "admin2021"
+password1 = input("请输入密码:")
+while password1 != password:
+    password1 = input("密码错误，请重新输入!\n")
+print("欢迎使用本系统")
+```
+
+知识点:
+
+1.  while 语句:
+
+    > while 条件：
+    >
+    > 代码块
+
+2.  循环次数必须是有限的，不能死循环
+3.  break 和 continue 语句
+
+    break:结束所在层的所有循环
+
+    continue:结束所在层的一次循环，转而执行下一次循环
+
+#### 2.3.2 for 循环语句
+
+> 例 2.8 假设登录一个系统需要输入密码，但只有 5 次机会。如果第 1 次输入不正确，显示“密码错误！还剩 4 次机会！”和“请重新输入:，第 2 次还不对，显示“密码错误！还剩 3 次机会！”和“请重新输入:”。如果密码正确，显示欢迎使用本系统！”，结束程序。如果 5 次输入都错误，则显示“密码错误，次数用完，请下次再试！”结束程序。（假设密码为 1234xyz）
+
+```
+key = "1234xyz"
+password = input("请输入密码:")
+for i in range(1, 6):
+    if password == key:
+        print("欢迎使用本系统!")
+        break
+    else:
+        if i < 5:
+            print("密码错误！还剩%d次机会！" % (5-i))
+            password = input("请重新输入:")
+        else:
+            print("密码错误，次数用完，请下次再试！")
+```
+
+知识点:
+
+1.  range()函数
+
+    语法格式:range(start=0, end, step=1)
+
+2.  for 语句
+
+    格式:for 变量 in 序列:
+
+            代码块
+
+#### 2.3.3 循环的嵌套
+
+> 例 2.9 利用 1、2、3.....、6 共六个数字组成一个 2 位数，个位只能取 1~3 共 3 个数字，能组成多少个无重复数字的 2 位数？输出这些 2 位数，每五个数一行。
+
+```
+count = 0
+for i in range(1, 7):
+    for j in range(1, 4):
+        if i != j:
+            print(i*10+j, end="   ")
+            count += 1
+            if count % 5 == 0:
+                print("")
+print("总共有:%d个" % (count))
+```
+
+巩固与拓展
+
+（1）输出 1 ～ 100（包括）之间能被 3 但不能被 7 整除的所有整数。
+
+```
+for i in range(1, 101):
+    if i % 3 == 0 and i % 7 != 0:
+        print(i, end="  ")
+
+```
+
+（2）编写程序，输出 100 ～ 2000 之间最大的 10 个素数。
+
+```
+sushu = []
+for i in range(100, 2001):
+    for j in range(2, i):
+        if i % j == 0:
+            break
+    if i == j+1:
+        sushu.append(i)
+print(sushu[-10:])
+```
+
+（3）求出两个整数 m~n 之间所有整数各个位上的奇数数字之和。例如 m ＝ 7，n ＝ 12，则 m~n 之间的所有整数是:7、8、9、10、11、12，各个位上的奇数数字之和 7 ＋ 9 ＋ 1 ＋ 1 ＋ 1 ＋ 1 ＝ 20
+
+```
+m = int(input("请输入一个整数:"))
+n = int(input("请输入一个整数:"))
+sum = 0
+for i in range(m, n+1):
+    if i < 10:
+        if i % 2 != 0:
+            sum += i
+    else:
+        if i % 2 != 0:
+            sum += i % 10
+            i = i//10
+            if i % 2 != 0:
+                sum += i
+        else:
+            i = i//10
+            if i % 2 != 0:
+                sum += i
+print(sum)
+```
+
+（4）韩信点兵。如果从 1 到 5 报数，最末一个兵报数为 1，从 1 到 6 报数，最末一个兵报数为 5，从 1 到 7 报数，最末一个士兵报数为 4 ,从 1 到 11 报数，最末一个兵报数为 10，请帮韩信计算他至少有多少兵。
+
+```
+i = 0
+while(1):
+    if i % 5 == 1 and i % 6 == 5 and i % 7 == 4 and i % 11 == 10:
+        print(i)
+        break
+    i += 1
+```
+
+算术游戏:
+
+```
+import sys
+import random
+for i in range(3):
+    psd = input("请输入密码")
+    if psd.strip(" ") == "123":
+        break
+    else:
+        if(i == 2):
+            print("密码错误3次,程序停止运行!")
+            sys.exit(1)
+        else:
+            print("密码错误,请重新输入!")
+signs = ['+', '-', '*', '//']
+right = 0
+error = 0
+for i in range(10):
+    op1 = random.randint(0, 100)
+    op2 = random.randint(0, 100)
+    sign = random.choice(signs)
+    if sign == '+':
+        print(str(op1)+sign+str(op2)+"=", end=' ')
+        answer = int(input())
+        if answer == op1+op2:
+            print("恭喜你答对了!")
+            right += 1
+        else:
+            print("很遗憾答错了!")
+            print("正确答案是:%d" % (op1+op2))
+            error += 1
+    elif sign == '-':
+        print(str(op1)+sign+str(op2)+"=", end=' ')
+        answer = int(input())
+        if answer == op1-op2:
+            print("恭喜你答对了!")
+            right += 1
+        else:
+            print("很遗憾答错了!")
+            print("正确答案是:%d" % (op1-op2))
+            error += 1
+    elif sign == '*':
+        print(str(op1)+sign+str(op2)+"=", end=' ')
+        answer = int(input())
+        if answer == op1*op2:
+            print("恭喜你答对了!")
+            right += 1
+        else:
+            print("很遗憾答错了!")
+            print("正确答案是:%d" % (op1*op2))
+            error += 1
+    if sign == '//':
+        print(str(op1)+sign+str(op2)+"=", end=' ')
+        answer = int(input())
+        if answer == op1//op2:
+            print("恭喜你答对了!")
+            right += 1
+        else:
+            print("很遗憾答错了!")
+            print("正确答案是:%d" % (op1//op2))
+            error += 1
+print("答对的次数: ", right, "答错的次数: ", error)
 ```
