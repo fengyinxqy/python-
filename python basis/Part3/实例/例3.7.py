@@ -1,0 +1,12 @@
+score_python = [65, 88, 79, 95, 100, 58, 81, 58, 90, 77]
+score_python.append(33)
+print(score_python)
+print(score_python.index(100))
+score_python.insert(4, 99)
+print(score_python)
+score_python.remove(99)
+score_python.pop()
+print(score_python)
+score_python.sort(key=None, reverse=True)
+print(score_python)
+print(score_python[0:5])
