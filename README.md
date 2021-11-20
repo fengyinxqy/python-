@@ -24,6 +24,8 @@
     - [3.3 元组](#33-元组)
     - [3.4 字典](#34-字典)
       - [3.4.1 字典的基本操作](#341-字典的基本操作)
+      - [3.4.2 字典的内置函数和方法](#342-字典的内置函数和方法)
+    - [3.5 应用实例](#35-应用实例)
 
 <!-- /TOC -->
 
@@ -954,3 +956,195 @@ dict2['Jerry']: 8
 
 1. 字典的键是不可变对象，在命名是可以使用数字，字符串或者是元组，但是不能是可变对象如列表。
 2. 访问是用键来作为索引的，删除单个使用 del，清空字典使用 clear()方法，
+
+#### 3.4.2 字典的内置函数和方法
+
+> 例 3.12 使用字典的内置函数和方法对字典数据进行操作
+
+```
+dict2 = {'Jerry': 8, 'Tom': 10, 'Lily': 9}
+print(len(dict2))
+print(type(dict2))
+print(str(dict2))
+print(dict2.items())
+print(dict2.keys())
+print(dict2.values())
+print(dict2.get('Lily', 20))
+print(dict2.get('Luck', 18))
+print(dict2.pop('Lily', 20))
+print(dict2.popitem())
+print(dict2)
+dict3 = dict2.fromkeys('ABCDEF', 9)
+print(dict3)
+print(dict2)
+dict3.update(dict2)
+print(dict3)
+dict2.setdefault('Jerry', 16)
+print(dict2)
+dict2.setdefault('Lily', 10)
+print(dict2)
+
+运行结果:
+3
+<class 'dict'>
+{'Jerry': 8, 'Tom': 10, 'Lily': 9}
+dict_items([('Jerry', 8), ('Tom', 10), ('Lily', 9)])
+dict_keys(['Jerry', 'Tom', 'Lily'])
+dict_values([8, 10, 9])
+9
+18
+9
+('Tom', 10)
+{'Jerry': 8}
+{'A': 9, 'B': 9, 'C': 9, 'D': 9, 'E': 9, 'F': 9}
+{'Jerry': 8}
+{'A': 9, 'B': 9, 'C': 9, 'D': 9, 'E': 9, 'F': 9, 'Jerry': 8}
+{'Jerry': 8}
+{'Jerry': 8, 'Lily': 10}
+```
+
+> 例 3.13 二维列表中存放有若干名学生的基本信息，每个学生的信息包括:姓名、性别和年龄，将男生和女生的人数存入字典并保存。
+
+```
+StuInfo = [["王硕", "男", 18], ["李梅", "女", 21], ["赵翔", "男", 20], ["王楠", "女", 19], [
+    "张力", "男", 20], ["陈昊", "男", 18], ["丁宁", "女", 19], ["王飞", "男", 20]]
+StuDict = {}
+for item in StuInfo:
+    sex = item[1]
+    StuDict[sex] = StuDict.get(sex, 0)+1
+print("统计结果为:")
+for key, value in StuDict.items():
+    print(key, value, "人")
+
+运行结果:
+统计结果为:
+男 5 人
+女 3 人
+```
+
+知识点:
+
+1. get()方法:
+
+   > 字典名.get(键[,默认值])
+
+2. 字典常用方法
+   |方法|功能描述|
+   |----|-------|
+   |clear()|清空字典|
+   |copy()|返回字典的浅复制副本|
+   |items()|返回字典键值对元组组成的列表|
+   |keys()|返回字典键组成的列表|
+   |values()|返回字典值组成的列表|
+   |get()|返回字典某个键所对应的值|
+   |pop()|删除并返回指定键对应的字典元素|
+   |popitem()|随机删除并返回一个字典元素组成的元组|
+   |fromkeys()|使用指定序列和值创建一个字典|
+   |update()|更新字典的键值对|
+   |setdefault()|返回键对应的默认值,缺少默认值时用参数值更新字典|
+
+巩固与拓展
+
+1. 使用字典来管理一个系统所有的账户密码
+
+```
+dict = {"username": "xiaoqiyan", "password": 123456}
+username = input("请输入用户名:")
+password = int(input("请输入密码:"))
+if username == dict["username"]:
+    if password == dict["password"]:
+        print("用户名，密码正确!")
+
+运行结果:
+请输入用户名:xiaoqiyan
+请输入密码:123456
+用户名，密码正确!
+```
+
+### 3.5 应用实例
+
+> 设计一个通讯录管理系统，包括信息的添加、删除和查找等功能。通讯录中每个人的信息如表 3-4 所示。程序运行后，会在屏幕上显示功能列表，按编号选择相应的功能，执行完一项功能后，会继续显示功能列表，可以选择相应的功能继续执行，直到输入编号 0，结束整个程序。功能列表如下所示:
+
+0. 退出
+1. 添加信息
+2. 删除信息
+3. 查找信息
+4. 统计人数
+5. 显示信息
+
+| 姓名 | 电话 | 工作地点    |
+| ---- | ---- | ----------- |
+| 张三 | 北京 | 13812345678 |
+| 李四 | 上海 | 18512345678 |
+| 王五 | 广州 | 13912345678 |
+
+```
+import sys
+flag = 1
+data = []
+while(1):
+    print("***************")
+    print("   1、添加信息")
+    print("   2、删除信息")
+    print("   3、查找信息")
+    print("   4、统计人数")
+    print("   5、显示信息")
+    print("   0、退出")
+    print("***************")
+    ch = int(input("请输入功能编号:"))
+    if ch == 0:
+        sys.exit(0)
+    elif ch == 1:
+        person = []
+        info = input("请输入姓名，电话，工作地点(中文逗号分隔)")
+        person = info.strip(" ").split("，")
+        data.append(person)
+    elif ch == 2:
+        flag = 0
+        if(len(data) == 0):
+            print("通讯录为空!")
+        else:
+            name = input("请输入要删除的姓名:").strip(" ")
+            for line in data:
+                if(line[0] == name):
+                    flag = 1
+                    data.remove(line)
+                    break
+            if(flag == 0):
+                print("没有找到{}的信息".format(name))
+    elif ch == 3:
+        flag = 0
+        if(len(data) == 0):
+            print("通讯录为空!")
+        else:
+            name = input("请输入要查找的姓名:").strip(" ")
+            for line in data:
+                if(line[0] == name):
+                    flag = 1
+                    print("查询结果为:")
+                    print(line[0], line[1], line[2])
+                    break
+            if(flag == 0):
+                print("没有找到{}的信息".format(name))
+    elif ch == 4:
+        if(len(data) > 0):
+            p_dict = {}
+            for line in data:
+                p_dict[line[2]] = p_dict.get(line[2], 0)+1
+            print("统计结果为:")
+            for key, value in p_dict.items():
+                print(key, value, "人")
+        else:
+            print("通讯录为空!")
+    elif ch == 5:
+        if len(data) > 0:
+            for line in data:
+                for item in line:
+                    print(item, end=' ')
+                print("\n")
+        else:
+            print("通讯录为空!")
+    else:
+        print("您输入的编号错误!!!")
+
+```
