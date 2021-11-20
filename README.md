@@ -749,3 +749,69 @@ print(score_python[0:5])
 ```
 
 > 构建一个学生成绩的信息列表，要求表中的每个元素又是一个包含学生基本信息(学号、姓名、成绩)的列表数据，程序能够实现学生信息的添加，删除，统计，排序等操作。
+
+```
+score = [[1901, '张三', 80], [1902, '李四', 69], [
+    1903, '王二', 70], [1904, '赵六', 68], [1905, '孙七', 58]]
+for item in score:
+    print(item)
+print("******><><******")
+while(1):
+    print("1.增加一条学生成绩")
+    print("2.按照学号删除成绩")
+    print("3.全部学生成绩平均值")
+    print("4.输出成绩的前三名")
+    print("0.Exit")
+    choice = int(input("请输入你的选择:").strip(" "))
+    if choice == 0:
+        break
+    elif choice == 1:
+        new_score = input("按学号、姓名和成绩的顺序输入一条信息(逗号隔开):\n").strip(" ")
+        new_score = new_score.strip(" ").split(",")
+        new_score[0] = int(new_score[0])
+        new_score[2] = int(new_score[2])
+        score.append(new_score)
+    elif choice == 2:
+        num = int(input("请输入要删除的学号:").strip(" "))
+        for item in score:
+            if item[0] == num:
+                score.remove(item)
+                break
+    elif choice == 3:
+        sum = 0
+        for item in score:
+            sum += item[2]
+        average = sum/len(score)
+        print(average)
+    elif choice == 4:
+        score.sort(key=lambda x: x[2], reverse=True)
+        print(score[0:3])
+    else:
+        print("编号输入错误!")
+```
+
+知识点:
+
+1. 字符串处理:字符串常用操作包括:替换、删除、截取、赋值、连接、比较、查找、分割等。
+   1. strip()方法可以移除字符串头尾指定的字符或字符串，返回删除后得到的新序列
+   2. slip()方法是对字符串进行分隔
+2. 转义字符
+   1. 输出特殊字符
+   2. 表示一些特殊的控制字符，如\r(回车),\n(换行符),\t(制表符)
+   3. 如 s='It's me',会报错应该写成 s='It\'s me'
+   4. 如果在字符串中要使用'\'时就要写成'\\'
+3. lambda 表达式
+
+   常用形式:lambda 形参 1,形参 2...........:表达式
+
+   ```
+   如 add=lambda a,b:a+b
+   print(add(6,8))
+   结果:14
+   ```
+
+4. 升序和降序
+   1. 不指定参数默认是升序排列
+   2. 带参数:sort(key=None,reverse=True)
+      1. key 是可以指定对哪些元素进行排序
+      2. reverse 指定排序规则,True 降序,False 升序
