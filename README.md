@@ -26,6 +26,12 @@
       - [3.4.1 字典的基本操作](#341-字典的基本操作)
       - [3.4.2 字典的内置函数和方法](#342-字典的内置函数和方法)
     - [3.5 应用实例](#35-应用实例)
+    - [第 4 章 函数](#第-4-章-函数)
+      - [4.1 函数的定义和调用](#41-函数的定义和调用)
+      - [4.2 函数的参数传递](#42-函数的参数传递)
+      - [4.3 变量的作用域](#43-变量的作用域)
+      - [4.4 函数模块化编程](#44-函数模块化编程)
+      - [4.5 应用实例](#45-应用实例)
 
 <!-- /TOC -->
 
@@ -1146,5 +1152,233 @@ while(1):
             print("通讯录为空!")
     else:
         print("您输入的编号错误!!!")
+
+```
+
+### 第 4 章 函数
+
+使用函数的目的:
+
+1. 分解问题，降低编程难度
+2. 代码的重复利用
+
+#### 4.1 函数的定义和调用
+
+> 例 4.1 编写一个函数，实现机器人自动问好的功能
+
+```
+def hello():
+    print("Hello!")
+    print("I am Robot A. ")
+    print("Nice to meet you!")
+
+
+hello()
+```
+
+> 例 4.2 编写一个函数，实现机器人自动问候的功能，并能够指出问候的对象
+
+```
+def hello(name):
+    print("Hello!{}!".format(name))
+    print("I am Robot A. ")
+    print("Nice to meet you!")
+
+
+hello("Jack")
+```
+
+知识点:
+
+1. 函数的定义格式
+
+   > def <函数名>(<参数列表>):
+   > <函数名>
+   > return <返回值列表>
+
+2. 函数的调用
+
+   > <函数名>(<参数列表>)
+
+3. 形参和实参
+   定义函数时参数列表里的是形式参数
+
+调用时是实际参数
+
+#### 4.2 函数的参数传递
+
+> 例 4.3 编写一个函数进行数学运算，要求有三个形参且形参中有默认值
+
+```
+def jisuan(x, y, z=8):
+    print(x*y)
+    print(x+y+z)
+    print(6*'*')
+
+
+jisuan(3, 2)
+
+jisuan(1, 2, 3)
+
+运行结果:
+6
+13
+******
+2
+6
+******
+```
+
+> 例 4.4 编写一个带默认值的函数，在函数中运算后将结果用 return 语句返回
+
+```
+def jisuan(x, y, z=2):
+    return (x+y+z)
+
+
+s = jisuan(3, 4)
+print(s)
+print(jisuan(3, 8, 3))
+
+运行结果:
+9
+14
+```
+
+#### 4.3 变量的作用域
+
+> 例 4.5 分析下面程序中同名变量的不同作用
+
+```
+number = 0
+
+
+def add(num1, num2):
+    number = num1+num2
+    print("函数内变量number: ", number)
+    return number
+
+
+add(1, 2)
+print("函数外变量number: ", number)
+```
+
+> 例 4.6 编写程序，使得函数内部可以操作全局变量
+
+```
+number = 0
+
+
+def add(num1, num2):
+    global number
+    number = num1+num2
+    print("函数内变量number: ", number)
+    return number
+
+
+add(1, 2)
+print("函数外变量number: ", number)
+```
+
+知识点:
+
+1. 局部变量:函数内部定义的变量，只能在声明的函数内部访问
+2. 全局变量:在函数外部定义的变量，在程序全过程都有效，如果要在函数内部使用要先使用保留字 global 声明
+
+#### 4.4 函数模块化编程
+
+> 例 4.7 将第 3 章中的例 3.8 改写，将每一种类型的操作改写成一个可被调用的函数
+
+```
+def add_student():
+    new_score = input("按学号、姓名和成绩的顺序输入一条信息(逗号隔开):\n").strip(" ")
+    new_score = new_score.strip(" ").split(",")
+    new_score[0] = int(new_score[0])
+    new_score[2] = int(new_score[2])
+    return score.append(new_score)
+
+
+def del_student():
+    num = int(input("请输入要删除的学号:").strip(" "))
+    count = len(score)
+    for item in score:
+        count = count-1
+        if item[0] == num:
+            score.remove(item)
+            print("删除成功!")
+            break
+
+
+def average():
+    sum = 0
+    for item in score:
+        sum += item[2]
+    if sum == 0:
+        print("学生数据为空!")
+    else:
+        average = sum/len(score)
+        print(average)
+
+
+def top3(line):
+    line = sorted(line, key=(lambda item: item[2]), reverse=True)
+    print(line[0:3])
+
+
+score = [[1901, '张三', 80], [1902, '李四', 69], [
+    1903, '王二', 70], [1904, '赵六', 68], [1905, '孙七', 58]]
+
+for item in score:
+    print(item)
+print("******><><******")
+while(1):
+    print("1.增加一条学生成绩")
+    print("2.按照学号删除成绩")
+    print("3.全部学生成绩平均值")
+    print("4.输出成绩的前三名")
+    print("0.Exit")
+    try:
+        choice = int(input("请输入你的选择:").strip(" "))
+        if choice == 0:
+            break
+        elif choice == 1:
+            add_student()
+        elif choice == 2:
+            del_student()
+        elif choice == 3:
+            average()
+        elif choice == 4:
+            top3(score)
+        else:
+            print("输入编号错误!")
+    except:
+        print("请输入数字!")
+
+```
+
+知识点:
+
+1. 函数的定义与调用
+2. 异常处理:Python 中的错误有语法错误，逻辑错误，运行错误三种。
+
+| 异常名            | 异常含义                       |
+| ----------------- | ------------------------------ |
+| Exception         | 常规异常基类，可以捕获任意异常 |
+| NameError         | 未声明或未初始化的变量被引用   |
+| SytaxError        | 语法错误                       |
+| ZeroDivisionError | 除数为 0                       |
+| IndexError        | 索引超出范围                   |
+| FileNotFoundError | 要打开的文件不存在             |
+| AttributeError    | 对象的属性不存在               |
+
+1. try....except
+2. try....except...else
+3. try....except...finally
+
+#### 4.5 应用实例
+
+> 将 3.5 应用实例中的添加信息，删除信息，查询信息，统计人数和显示信息 5 个功能分别用 5 个函数实现
+
+```
 
 ```
