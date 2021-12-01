@@ -32,6 +32,11 @@
       - [4.3 变量的作用域](#43-变量的作用域)
       - [4.4 函数模块化编程](#44-函数模块化编程)
       - [4.5 应用实例](#45-应用实例)
+    - [第 5 章 文件](#第-5-章-文件)
+      - [5.1 文件的打开和关闭操作](#51-文件的打开和关闭操作)
+      - [5.2 文件的读写操作](#52-文件的读写操作)
+      - [5.3 文本文件操作](#53-文本文件操作)
+      - [5.4 CSV 文件的读写](#54-csv-文件的读写)
 
 <!-- /TOC -->
 
@@ -1380,5 +1385,230 @@ while(1):
 > 将 3.5 应用实例中的添加信息，删除信息，查询信息，统计人数和显示信息 5 个功能分别用 5 个函数实现
 
 ```
+import sys
+flag = 1
+data_end = []
+
+
+def insert(data):
+    person = []
+    info = input("请输入姓名，电话，工作地点(中文逗号分隔)")
+    person = info.strip(" ").split("，")
+    data.append(person)
+    return data
+
+
+def delete(data):
+    flag = 0
+    if(len(data) == 0):
+        print("通讯录为空!")
+    else:
+        name = input("请输入要删除的姓名:").strip(" ")
+        for line in data:
+            if(line[0] == name):
+                flag = 1
+                data.remove(line)
+                break
+        if(flag == 0):
+            print("没有找到{}的信息".format(name))
+    return data
+
+
+def search(data):
+    flag = 0
+    if(len(data) == 0):
+        print("通讯录为空!")
+    else:
+        name = input("请输入要查找的姓名:").strip(" ")
+        for line in data:
+            if(line[0] == name):
+                flag = 1
+                print("查询结果为:")
+                print(line[0], line[1], line[2])
+                break
+        if(flag == 0):
+            print("没有找到{}的信息".format(name))
+
+
+def count(data):
+    if(len(data) > 0):
+        p_dict = {}
+        for line in data:
+            p_dict[line[2]] = p_dict.get(line[2], 0)+1
+        print("统计结果为:")
+        for key, value in p_dict.items():
+            print(key, value, "人")
+    else:
+        print("通讯录为空!")
+
+
+def show(data):
+    if len(data) > 0:
+        for line in data:
+            for item in line:
+                print(item, end=' ')
+            print("\n")
+    else:
+        print("通讯录为空!")
+
+
+while(1):
+    print("***************")
+    print("   1、添加信息")
+    print("   2、删除信息")
+    print("   3、查找信息")
+    print("   4、统计人数")
+    print("   5、显示信息")
+    print("   0、退出")
+    print("***************")
+    try:
+        ch = int(input("请输入功能编号:"))
+        if ch == 0:
+            sys.exit(0)
+        elif ch == 1:
+            data_end = insert(data_end)
+        elif ch == 2:
+            data_end = delete(data_end)
+        elif ch == 3:
+            search(data_end)
+        elif ch == 4:
+            count(data_end)
+        elif ch == 5:
+            show(data_end)
+        else:
+            print("功能编号错误!")
+    except:
+        print("输入的不是数字!")
+
+```
+
+### 第 5 章 文件
+
+#### 5.1 文件的打开和关闭操作
+
+> 打开一个当前目录下的文件，进行简单的操作后，关闭这个文件
+
+```
+paper = open('first', 'x')
+paper.write("Welcome to Python File World!")
+paper.close()
+paper2 = open('first', 'r')
+hello = paper2.readline()
+print(hello)
+```
+
+知识点:
+
+1. open()函数打开模式
+   |打开模式|功能含义|
+   |--|--|
+   |'r'| 只读模式(默认) |
+   |'w'| 只写模式，如果文件存在则覆盖原文件，不存在则新建 |
+   |'x'| 创建新文件，以只写方式打开 |
+   |'a'| 追加写方式打开文件，文件不存在则创建，存在则在文件最后追加写入 |
+   |'b'| 二进制文件模式 |
+   |'t'| 文本模式(默认) |
+   |'+'| 用于模式叠加操作，在原有模式上同时增加读写模式 |
+2. 打开文件后记得关闭文件
+
+#### 5.2 文件的读写操作
+
+文本文件的读写是按照字符串方式进行，二进制文件的读写是按照字节流进行
+
+> 例 5.2 新建一个文件，并向文件内写入几行数据，写完后重新定位读写指针位置到文件的开头，输出全部文件的内容
+
+```
+paper = open('first', 'w+')
+print(paper.read())
+
+paper.write('Welcome to Python File World!\r\n')
+paper.write('Python is very powerful!\r\n')
+
+paper.write('Python is also interesting!\r\n')
+print(paper.read())
+paper.seek(0)
+print(paper.read())
+paper.close()
+
+```
+
+知识点:
+
+1. 文件的读写方法
+   |方法函数|功能含义|
+   |---|---|
+   |read()|返回字符或字符串，可设定参数指定返回数量，不指定或指定为负数全部返回|
+   |readline()|读取一行数据，指定参数时返回参数指定字节数的字符|
+   |readlines()|以行为单位读取多行数据，指定参数时表示返回的行数|
+   |write()|将指定的数据写入文件，参数就是要写入的数据，返回写入的字节数大小|
+   |writelines()|写入一个字符串的列表到文件中，不返回结果|
+   |seek()|设定读写指针的指向位置，0 为开头，1 为当前位置，2 为文件末尾|
+   |tell()|返回读写指针的指向位置|
+
+#### 5.3 文本文件操作
+
+> 例 5.3 读取一个记录了用户信息(账号和密码)的文本文件，用户信息包括账号名和密码两部分，文本中每行记录一条用户信息，账号和密码之间用空格隔开，查找文件是否存在一个账户名为 hello 的账号，如存在将其密码修改为 123456；若不存在，则在文件尾部追加一个 hello 账户信息，并设定密码为 123456.
+
+```
+
+print("文本内原始信息: ")
+with open('User.txt', 'r', encoding='utf-8') as f:
+    userlist = []
+    for line in f.readlines():
+        print(line.strip('\n'))
+        user = line.strip('\n').split(' ')
+        userlist.append(user)
+flag = 0
+for item in userlist:
+    if item[0] == "hello":
+        item[1] == "123456"
+        flag = 1
+if flag == 0:
+    newUser = ["hello", "123456"]
+    userlist.append(newUser)
+print("修改后文本信息: ")
+with open('User.txt', 'w', encoding='utf-8') as f_w:
+    for item in userlist:
+        f_w.write(item[0]+" "+item[1]+'\n')
+        print(item[0]+" "+item[1])
+if flag == 1:
+    print("hello用户已存在,密码已修改!")
+else:
+    print("hello用户不存在,已创建此用户")
+
+```
+
+#### 5.4 CSV 文件的读写
+
+> 例 5.4 有一个存放学生信息的文件 student.csv，存有五名学生的学号、姓名、成绩信息，读取并显示文件内容，计算学生成绩的平均值，根据学生的成绩进行排序，并将排序后的结果写入新文件 student123.csv 中
+
+```
+student_xy = []
+print("原文件的内容是:")
+with open('student.csv', 'r', encoding='gb18030') as data:
+    for line in data:
+        print(line.strip())
+        line = line.strip()
+        student_xy.append(line.split('，'))
+print("转换成列表后是: ")
+print(student_xy)
+print("课程的平均成绩是: ")
+score = student_xy[1:]
+sum = 0
+for item in score:
+    sum = sum+int(item[2])
+average = sum/len(score)
+print(average)
+print("按照成绩排名是: ")
+score = sorted(score, key=(lambda item: int(item[2])), reverse=True)
+print(score)
+with open('student123.csv', 'w', encoding='utf-8')as data:
+    data.write('，'.join(student_xy[0])+'\n')
+    for s in score:
+        data.write('，'.join(s)+'\n')
+print("排序后的新文件内容是: ")
+with open('student123.csv', 'r', encoding='utf-8')as data:
+    for line in data:
+        print(line.strip())
 
 ```
