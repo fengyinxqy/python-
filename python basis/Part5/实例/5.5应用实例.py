@@ -12,7 +12,7 @@ def readtxt(filename):
             xing_one = []
             if len(row[2]) == 3:
                 yue1 = row[2][0]
-                ri1 = [2][1:3]
+                ri1 = row[2][1:3]
             else:
                 yue1 = row[2][0:2]
                 ri1 = row[2][2:4]
@@ -38,7 +38,7 @@ def readcsv(filename, xing):
         people = []
         for item in sr:
             person = []
-            per = item.strip("\n").split("，")
+            per = item.strip("\n").split("\t")
             date = per[1].split("-")
             person.append(per[0])
             person.append(date[1]+"月"+date[2]+"日")
@@ -46,7 +46,7 @@ def readcsv(filename, xing):
                 if (int(date[1]) == line[1] and int(date[2]) >= line[2]) or (int(date[1]) == line[3] and int(date[2]) <= line[4]):
                     per.append(line[0])
                     break
-            people.append(person)
+            people.append(per)
     return people
 
 
@@ -63,16 +63,18 @@ def Stats(people):
         dict_num[line[2]] = dict_num.get(line[2], 0)+1
     return dict_num
 
+
 def writetxt(filename):
-    with open(filename,"w")as f:
+    with open(filename, "w")as f:
         f.write("星座    人数"+"\n")
         f.write("-------------"+"\n")
-        for key,value in dict_num.items():
+        for key, value in dict_num.items():
             f.write(key+"  "+str(value)+"\n")
 
-if __name__=='__main__':
-    list_xing=readtxt("星座.txt")
-    list_people=readcsv("生日.csv",list_xing)
-    writecsv("生日星座.csv",list_people)
-    dict_num=Stats(list_people)
+
+if __name__ == '__main__':
+    list_xing = readtxt("星座.txt")
+    list_people = readcsv("生日.csv", list_xing)
+    writecsv("生日星座.csv", list_people)
+    dict_num = Stats(list_people)
     writetxt("星座统计.txt")
