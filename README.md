@@ -1970,6 +1970,78 @@ Student2.output()
 
 > （2）定义一个圆类，包含 1 个对象属性：半径；2 个对象方法：area()计算圆的面积，circum()计算圆的周长。创建两个不同半径的对象，测试类的正确性。
 
-> （3）定义 Comput 类，包含 2 个对象属性：两个整数；4 个对象方法：Add()、Sub()、Mult()和 Div() 分别实现加、减、乘、除运算。创建一个对象，验证类的正确性。
+```
+import math
 
-> （4）设计一个系统管理员类，包含 2 个类属性：Acount 和 password，初始值分别设为“admin＇和“2020”。2 个类方法：Change（0 修改管理员的账号和密码，Pnl（）输出管理员账号和密码。分别使用对象调用和类名直接调用验证类方法的正确性。
+
+class circular(object):
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        print("圆的面积是:%.2f" % (math.pi*pow(self.radius, 2)))
+
+    def circum(self):
+        print("圆的周长是:%.2f" % (2*math.pi*self.radius))
+
+
+radius1 = circular(5)
+radius1.area()
+radius1.circum()
+
+```
+
+> （3）定义 Compute 类，包含 2 个对象属性：两个整数；4 个对象方法：Add()、Sub()、Mult()和 Div() 分别实现加、减、乘、除运算。创建一个对象，验证类的正确性。
+
+```
+class compute(object):
+    def __init__(self, num1, num2):
+        self.num1 = num1
+        self.num2 = num2
+
+    def Add(self):
+        print("a+b=%d" % (self.num1+self.num2))
+
+    def Sub(self):
+        print("a-b=%d" % (self.num1-self.num2))
+
+    def Mult(self):
+        print("a*b=%d" % (self.num1*self.num2))
+
+    def Div(self):
+        print("a/b=%.2f" % (self.num1/self.num2))
+
+
+compute1 = compute(8, 4)
+compute1.Add()
+compute1.Sub()
+compute1.Mult()
+compute1.Div()
+```
+
+> （4）设计一个系统管理员类，包含 2 个类属性：Acount 和 password，初始值分别设为“admin＇和“2020”。2 个类方法：Change() 修改管理员的账号和密码，Prnt()输出管理员账号和密码。分别使用对象调用和类名直接调用验证类方法的正确性。
+
+```
+class manager(object):
+    Acount = "admin"
+    password = "2020"
+
+    def __init__(self, Acount, password):
+        self.Acount = Acount
+        self.password = password
+
+    @classmethod
+    def Change(cls, a, p):
+        cls.Acount = a
+        cls.password = p
+
+    def pnf(self):
+        print("账号:"+manager.Acount + " 密码:"+str(manager.password))
+
+
+manager1 = manager("admin", "2020")
+manager1.pnf()
+manager.Change("xiaoqiyan", "2001")
+manager1.pnf()
+
+```
