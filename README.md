@@ -44,6 +44,10 @@
         - [6.1.2 对象属性和方法](#612-对象属性和方法)
         - [6.1.3 构造方法和非构造方法](#613-构造方法和非构造方法)
         - [6.1.4 类的属性和方法](#614-类的属性和方法)
+      - [6.2 面向对象编程的三大特性](#62-面向对象编程的三大特性)
+        - [6.2.1 封装](#621-封装)
+        - [6.2.2 继承](#622-继承)
+        - [6.2.3 多态](#623-多态)
 
 <!-- /TOC -->
 
@@ -2045,3 +2049,224 @@ manager.Change("xiaoqiyan", "2001")
 manager1.pnf()
 
 ```
+
+#### 6.2 面向对象编程的三大特性
+
+##### 6.2.1 封装
+
+> 例 6.5 定义管理员类。包括 1 个类属性：user_list，是用来存储多个普通用户的账户和密码列表。5 个对象方法，其功能分别是：检测给定的管理员账户是否合法、检测给定的管理员密码是否合法、添加用户、删除用户和修改密码。有 1 个类方法，其功能是输出所有用户的账户及其密码信息。要求：将管理员的账号和密码设为私有属性，初始值分别是“admin”和“admin2010”。创建一个管理员对象，验证类的正确性。
+
+```
+class Admin(object):
+    userlist = []
+
+    def __init__(self, name, password):
+        self.__name = "admin"
+        self.__password = "admin2010"
+        self.IsNameOk(name)  # 检测用户名是否合法
+        self.IsPasswordOk(password)  # 检测密码是否合法
+    """ 检测账户是否合法 """
+
+    def IsNameOk(self, name):
+        if name.strip(" ") != self.__name:
+            raise Exception("用户名错误!")
+
+    def IsPasswordOk(self, password):
+        if password.strip(" ") != self.__password:
+            raise Exception("密码错误!")
+
+    def AddUser(self, user_name, user_pwd):
+        Admin.userlist.append([user_name, user_pwd])
+
+    def DeleteUser(self, user_name):
+        flag = 1
+        for line in Admin.userlist:
+            if line[0] == user_name:
+                Admin.userlist.remove(user_name)
+                flag = 0
+                break
+        if flag:
+            print("该用户名不存在!")
+
+    def ChangePsd(self, user_name, user_password):
+        flag = 1
+        for line in Admin.userlist:
+            if line[0] == user_name:
+                Admin.userlist.remove(line)
+                flag = 0
+                break
+        if flag:
+            print("该用户不存在!")
+        else:
+            Admin.userlist.append([user_name, user_password])
+
+    @classmethod
+    def PrintUserlist(cls):
+        print("用户名\t密码")
+        for item in cls.userlist:
+            print(item[0], item[1], sep='\t')
+
+
+if __name__ == "__main__":
+    a1 = Admin("admin", "admin2010")
+    a1.AddUser("xiaoqiyan", "666888")
+    a1.AddUser("zhangsan", "123456")
+    a1.ChangePsd("zhangsan", "456")
+    a1.PrintUserlist()
+
+```
+
+知识点:
+
+1. 什么是封装
+   比如在例子中将管理员的账号密码以及管理员所能进行的操作都封装在 Admin 类中，其实按照我的理解就是将这一堆类似的功能装到一个模块里
+2. 封装的优点
+   1. 使类内部和外部的代码相对独立，只提供给用户接口
+   2. 隐藏代码的细节
+   3. 提高了代码的重用性
+3. 私有成员和公有成员
+   1. 只能在类的内部使用
+   2. 私有成员写法:self.\_\_name
+   3. 如何访问私有成员呢?a1.\_Admin\_\_name
+
+##### 6.2.2 继承
+
+> 例 6.6 定义 Person 类，包括 2 个对象属性：姓名和年龄，1 个对象方法，功能是输出姓名和年龄。定义 Student 类，继承 Person 类所有属性和方法，另有 1 个对象属性：学号，1 个对象方法，功能是输出选修课的程名及其成绩
+
+```
+import random
+
+
+class Person(object):
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def say1(self):
+        print("我叫{},今年{}岁".format(self.name, self.age))
+
+
+class Student(Person):
+    def __init__(self, name, age, snum, course):
+        Person.__init__(self, name, age)
+        self.snum = snum
+        self.course = course
+
+    def say2(self):
+        print(self.course+"课的分数为: "+str(random.randint(80, 100)))
+
+
+stu1 = Person("张三", 18)
+stu2 = Student("李四", 20, "202101", "数学")
+stu1.say1()
+stu2.say1()
+stu2.say2()
+
+```
+
+知识点:
+
+1. 什么是继承
+   继承就是不需要编写与父类相同的代码就可以获取父类的属性和方法，object 处于父子关系顶端
+   > class 子类名(父类名):
+2. 继承的好处
+   代码重用
+3. 子类重写构造方法
+   > 父类名.**init**(self[参数 1，参数 2.....])
+
+##### 6.2.3 多态
+
+> 例 6.7 创建 Person 类，包含 1 个对象属性：姓名，1 个对象方法 say（），功能是输出姓名。创建继承 Person 类的子类 Student，包含 2 个对象属性：年龄和身高，1 个对象方法 say()，功能是输出姓名、年龄和身高。在两个类的外面，定义函数 Introduce()，形参是没有类型的对象，在函数体中，由形参调用 say()方法。
+
+```
+class Person(object):
+    def __init__(self, name):
+        self.name = name
+
+    def say(self):
+        print("我叫"+self.name)
+
+
+class Student(Person):
+    def __init__(self, name, age, height):
+        Person.__init__(self, name)
+        self.age = str(age)
+        self.height = str(height)
+
+    def say(self):
+        print("我叫{},今年{}岁,身高{}cm.".format(self.name, self.age, self.height))
+
+
+def introduce(obj):
+    obj.say()
+
+
+p1 = Person("张三")
+p2 = Student("李四", 20, 180)
+introduce(p1)
+introduce(p2)
+
+```
+
+知识点:
+
+1. 什么是多态
+   同一操作作用于不同对象产生不同的效果
+
+巩固与扩展
+
+> （1）设计一个三维向量类，包含 3 个对象属性：x、y 和 z，5 个对象方法：Add()和 Sub()分别实现 2 个三维向量的加和减操作；Mul()方法和 Div()方法分别实现三维向量乘上和除以整数的操作；PrstVector()方法输出向量的值。
+
+```
+class Vector3(object):
+    def __init__(self, x=0, y=0, z=0):
+        self.x = x
+        self.y = y
+        self.z = z
+
+    def Add(self, v):
+        v1 = Vector3()
+        v1.x = self.x+v.x
+        v1.y = self.y+v.y
+        v1.z = self.z+v.z
+        return v1
+
+    def Sub(self, v):
+        v1 = Vector3()
+        v1.x = self.x-v.x
+        v1.y = self.y-v.y
+        v1.z = self.z-v.z
+        return v1
+
+    def Mul(self, n):
+        v1 = Vector3()
+        v1.x = self.x*n
+        v1.y = self.y*n
+        v1.z = self.z*n
+        return v1
+
+    def Div(self, n):
+        v1 = Vector3()
+        v1.x = self.x/n
+        v1.y = self.y/n
+        v1.z = self.z/n
+        return v1
+
+    def show(self):
+        print((self.x, self.y, self.z))
+
+
+v1 = Vector3(1, 2, 3)
+v2 = Vector3(4, 5, 6)
+v3 = v2.Add(v1)
+v3.show()
+v4 = v2.Sub(v1)
+v4.show()
+v5 = v2.Mul(2)
+v5.show()
+v6 = v2.Div(2)
+v6.show()
+
+```
+
+> （2）定义 Person 类，包含 3 个对象属性：姓名、身高和体重，2 个对象方法：Compute()方法根据身高计算标准体重，OverWeight()方法用来判断是否超重（超过合理体重的 10％算超重）。定义 2 个 Person 的子类：Men 和 Women，有 1 个对象属性：性别。两个子类都有与父类 Person 重名的方法 Compute()，该方法在父类中的计算公式是：标准体重（kg）＝身高（cm）-105，在 Women 类中的计算方法是：［身高（cm）-70］×60％，在 Man 类中的计算方法是：［身高（cm）-80］×70％。在类外部，定义函数 test()，其形参是没有类型的对象，函数体中由形参调用 Compute（）方法，使用 Person、Women 和 Man 三种不类型的对象分别调用 Compute 函数，验证类的正确性
