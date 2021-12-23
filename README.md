@@ -38,6 +38,12 @@
       - [5.3 文本文件操作](#53-文本文件操作)
       - [5.4 CSV 文件的读写](#54-csv-文件的读写)
       - [5.5 应用实例](#55-应用实例)
+    - [第 6 章 面向对象编程](#第-6-章-面向对象编程)
+      - [6.1 类和对象的概念](#61-类和对象的概念)
+        - [6.1.1 类和对象](#611-类和对象)
+        - [6.1.2 对象属性和方法](#612-对象属性和方法)
+        - [6.1.3 构造方法和非构造方法](#613-构造方法和非构造方法)
+        - [6.1.4 类的属性和方法](#614-类的属性和方法)
 
 <!-- /TOC -->
 
@@ -1715,3 +1721,255 @@ if __name__ == '__main__':
     writetxt("星座统计.txt")
 
 ```
+
+### 第 6 章 面向对象编程
+
+#### 6.1 类和对象的概念
+
+##### 6.1.1 类和对象
+
+> 例 6.1 定义一个 Person 类，能说出姓名和职业，比如：“大家好，我叫张三，职业是教师”
+
+```
+class Person:
+    def say(self, name, occupation):
+        print("大家好,我叫"+name)
+        print("职业是"+occupation)
+
+
+teacher = Person()
+doctor = Person()
+teacher.say("张三", "教师")
+doctor.say("李四", "医生")
+```
+
+知识点:
+
+1. 类和对象的概念:对象指具体的事物，类是指事物的属性
+2. 类和对象的关系:具有共性的若干事物可以抽象成一个类，一个类可以实例化出若干对象
+
+##### 6.1.2 对象属性和方法
+
+> 例 6.2 定义一个类 Person，该类包含三个对象属性:姓名，性别，年龄和职业；三个对象方法，一个方法的功能是输出姓名和年龄，另外两个方法的功能分别是判断给定职业或年龄是否与已有相同
+
+```
+class Person(object):
+    def __init__(self, name, age, occupation):
+        self.name = name
+        self.age = age
+        self.occupation = occupation
+
+    def say(self):
+        print("大家好，我叫"+self.name+"，今年"+str(self.age) + ",职业是:"+self.occupation)
+
+    def judge_occupation(self, work):
+        if self.occupation == work.strip(" "):
+            print("职业相同")
+        else:
+            print("职业不同")
+
+    def judge_age(self, age):
+        if self.age == age:
+            print("年龄相同")
+        else:
+            print("年龄不同")
+
+
+Person1 = Person("张三", 20, "教师")
+Person2 = Person("李四", 30, "医生")
+Person1.say()
+Person2.say()
+Person1.judge_occupation("律师")
+Person2.judge_occupation("医生")
+Person2.judge_age(21)
+
+```
+
+知识点:
+
+1. 什么是对象属性
+
+   类的定义包括两个方面，数据成员和成员函数，数据成员用于描述对象的共性特征，也叫对象属性
+
+2. 什么是对象方法
+
+   对象方法也叫成员函数，用来描述对象的行为，用函数方式实现
+
+3. 对象属性的定义
+
+   对象属性是指定义在构造方法**init**()里面的属性，对象属性由两部分组成，前面是“self.”，后面是任意合法标识符，其中 self 表示对象本身。
+
+4. 对象方法的定义
+
+   对象方法定义形式如下
+
+   > def 方法名(self,[参数 1，参数 2,.....]):
+   > 代码块
+
+5. 对象方法的调用
+
+   > 对象名.方法名([参数列表])
+
+##### 6.1.3 构造方法和非构造方法
+
+> 例 6.3 系统登录时，需要验证用户名和密码的合法性，如果户名和密码正确，则输出“登录成功！”，结束程序。否则，输出“用户名或密码错误！”，重新输人，直到输入正确，结束程序。所有用户名和密码信息保存在“账号密码.txt”中，该文件中的每行对应一个人的账号和密码（逗号分隔），假设用户名和密码都是长度在 3 ～ 16 之间的字符串。定义登录验证的 Login 类，并通过实例化对象验证类的正确性。
+
+```
+class Login(object):
+    def __init__(self):
+        self.userlist = self.setvalue()
+
+    def setvalue(self):
+        userlist = []
+        with open('账号密码.txt', "r", encoding="utf-8")as f:
+            for line in f.readlines():
+                info = line[:-1].split(",")
+                userlist.append(info)
+        return userlist
+
+    def Check(self, name, password):
+        flag = 0
+        if self.isLegalUser(name, password):
+            for line in self.userlist:
+                if line[0] == name and line[1] == password:
+                    print("登录成功")
+                    flag = 1
+                    return flag
+            if flag == 0:
+                print("用户名或密码错误")
+        else:
+            print("账号或密码长度非法!")
+
+    def isLegalUser(self, name, password):
+        if len(name) >= 3 and len(name) < 16:
+            if len(password) >= 3 and len(password) <= 16:
+                return True
+        return False
+
+
+if __name__ == "__main__":
+    login = Login()
+    while(True):
+        str_name = input("请输入用户名:")
+        str_pwd = input("请输入密码:")
+        if login.Check(str_name, str_pwd):
+            break
+
+```
+
+知识点:
+
+1. 构造方法
+
+类中的两个特殊方法:一个是构造方法**init**():，一个是析构方法**def**()。一般会自动调用
+
+2. 构造方法的定义
+
+   > def **init**(self,[参数 1，参数 2]):
+   > 代码块
+   > 第一个参数是对象本身
+
+3. 对象方法的调用
+
+   1. 构造方法可以调用除本身之外任何方法
+   2. 其他对象方法之间可以互相调用
+   3. 其他对象方法不可以调用构造方法
+   4. 调用对象方法形式:
+      > self.方法名([参数 1，参数 2，.....])
+      > 参数位置没有 self
+
+4. if **name** == "**main**":
+   程序文件的两种使用方法:
+   1. 作为脚本直接执行
+   2. 作为模块导入其他文件执行
+      > if **name** == "**main**":后面的代码只在第一种情况下才执行
+
+##### 6.1.4 类的属性和方法
+
+> 例 6.4 创建一个学生选课的类，对象属性是姓名和成绩，类属性是课程名称和学分。除构造方法外，有 3 个对象方法，其功能分别是显示课程信息，修改课程学分和修改课程名称。
+
+```
+class CourseSelect(object):
+    credit = 3
+    cname = "计算机"
+
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+    # 显示课程信息
+
+    def CourseInfo(self):
+        print("课程名:"+CourseSelect.cname)
+        print("学分为:"+str(CourseSelect.credit))
+    # 修改课程学分
+
+    def set_credit(self, n):
+        CourseSelect.credit = n
+    # 修改课程名称
+
+    @classmethod
+    def set_name(cls, c):
+        cls.cname = c
+
+
+if __name__ == "__main__":
+    stu1 = CourseSelect("张三", 90)
+    stu2 = CourseSelect("李四", 100)
+    stu1.CourseInfo()
+    stu2.CourseInfo()
+    stu2.set_credit(5)
+    stu1.CourseInfo()
+    stu2.CourseInfo()
+    CourseSelect.set_name("英语")
+    stu1.CourseInfo()
+    stu2.CourseInfo()
+```
+
+知识点:
+
+1. 类属性的定义
+   类属性是在所有对象方法(包括构造方法)外定义
+2. 类属性的访问
+   类属性对于整个类都是课件的，在类内部和外部都可以调用
+3. 类方法的定义
+   类中定义的方法有 3 种:对象方法，类方法和静态方法
+   1. 类方法
+      > @classmethod
+      > def 方法名(cls,[可选参数列表])
+      > 代码块
+      > 第一个参数代表类
+4. 类方法的调用
+
+类方法不需要实例化，直接调用
+
+> 类名.类方法(参数列表)
+
+注意：
+对象方法只能由实例化的对象调用，类方法两种都可以调用
+
+巩固与拓展:
+
+> （1）定义一个学生类，包含 2 个对象属性：姓名和学号；1 个对象方法：output()输出学生的姓名和学号。创建 2 个学生对象，验证类的正确性。
+
+```
+class Student():
+    def __init__(self, name, number):
+        self.name = name
+        self.number = number
+
+    def output(self):
+        print("姓名:"+self.name)
+        print("学号:"+str(self.number))
+
+
+Student1 = Student("张三", 1)
+Student2 = Student("李四", 2)
+Student1.output()
+Student2.output()
+```
+
+> （2）定义一个圆类，包含 1 个对象属性：半径；2 个对象方法：area()计算圆的面积，circum()计算圆的周长。创建两个不同半径的对象，测试类的正确性。
+
+> （3）定义 Comput 类，包含 2 个对象属性：两个整数；4 个对象方法：Add()、Sub()、Mult()和 Div() 分别实现加、减、乘、除运算。创建一个对象，验证类的正确性。
+
+> （4）设计一个系统管理员类，包含 2 个类属性：Acount 和 password，初始值分别设为“admin＇和“2020”。2 个类方法：Change（0 修改管理员的账号和密码，Pnl（）输出管理员账号和密码。分别使用对象调用和类名直接调用验证类方法的正确性。
