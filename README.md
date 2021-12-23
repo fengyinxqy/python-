@@ -1,4 +1,4 @@
-<!-- TOC -->
+7<!-- TOC -->
 
 - [Python 学习笔记](#python-学习笔记)
   - [第一章 Python 概述](#第一章-python-概述)
@@ -49,7 +49,7 @@
 
 # Python 学习笔记
 
-2021/11/12 重新开始学习 Python 基础，最多用一个月的时间把基础学完。
+2021/11/12 重新开始学习 Python 基础
 
 `print("Hello World!") //输出 hello world`
 
