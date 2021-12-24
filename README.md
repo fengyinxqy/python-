@@ -1,4 +1,4 @@
-7<!-- TOC -->
+<!-- TOC -->
 
 - [Python 学习笔记](#python-学习笔记)
   - [第一章 Python 概述](#第一章-python-概述)
@@ -48,6 +48,10 @@
         - [6.2.1 封装](#621-封装)
         - [6.2.2 继承](#622-继承)
         - [6.2.3 多态](#623-多态)
+      - [6.3 应用实例](#63-应用实例)
+    - [第 7 章 图形用户界面设计](#第-7-章-图形用户界面设计)
+      - [7.2 tkinter 模块介绍](#72-tkinter-模块介绍)
+        - [7.2.1 标签和按钮组件](#721-标签和按钮组件)
 
 <!-- /TOC -->
 
@@ -2270,3 +2274,127 @@ v6.show()
 ```
 
 > （2）定义 Person 类，包含 3 个对象属性：姓名、身高和体重，2 个对象方法：Compute()方法根据身高计算标准体重，OverWeight()方法用来判断是否超重（超过合理体重的 10％算超重）。定义 2 个 Person 的子类：Men 和 Women，有 1 个对象属性：性别。两个子类都有与父类 Person 重名的方法 Compute()，该方法在父类中的计算公式是：标准体重（kg）＝身高（cm）-105，在 Women 类中的计算方法是：［身高（cm）-70］×60％，在 Man 类中的计算方法是：［身高（cm）-80］×70％。在类外部，定义函数 test()，其形参是没有类型的对象，函数体中由形参调用 Compute（）方法，使用 Person、Women 和 Man 三种不类型的对象分别调用 Compute 函数，验证类的正确性
+
+```
+class Person(object):
+    def __init__(self, name, height, weight):
+        self.name = name
+        self.height = height
+        self.weight = weight
+
+    def compute(self):
+        Standard_weight = self.height-105
+        return Standard_weight
+
+    def Overweight(self):
+        if self.weight > (self.compute()*1.1):
+            print("{},您超重了!".format(self.name))
+        else:
+            print("{},您没有超重!".format(self.name))
+
+
+class Women(Person):
+    def __init__(self, name, height, weight):
+        Person.__init__(self, name, height, weight)
+
+    def compute(self):
+        Standard_weight = (self.height-70)*0.6
+        return Standard_weight
+
+
+class Men(Person):
+    def __init__(self, name, height, weight):
+        Person.__init__(self, name, height, weight)
+
+    def compute(self):
+        Standard_weight = (self.height-80)*0.7
+        return Standard_weight
+
+
+def test(obj):
+    obj.Overweight()
+
+
+p1 = Person("zhangsan", 175, 60)
+p2 = Men("lisi", 175, 58)
+p3 = Women("feng", 152, 40
+
+
+test(p1)
+test(p2)
+test(p3)
+
+```
+
+#### 6.3 应用实例
+
+> 设计一个简单的学生选课系统，包括 2 个类：学生类和课程类。其中，学生类包括 4 个对象属性：姓名、学号、课程名列表及成绩字典，3 个对象方法：choice()模拟选课、exam()模拟考试和 OutputScore()显示成绩。课程类包括 1 个类属性 cour_info，用于存放所有的课程名，4 个类方法分别完成：打乱课程顺序、添加课程、删除课程和输出所有的课程名称。
+
+```
+import random
+
+
+class Student(object):
+    def __init__(self, name, snum):
+        self.name = name
+        self.snum = snum
+        self.course = []
+        self.score = {}
+
+    def choice(self, course):
+        for item in course:
+            self.course.append(item)
+
+    def exam(self):
+        for item in self.course:
+            self.score[item] = random.randint(30, 100)
+
+    def OutputScore(self):
+        print("课程类\t成绩")
+        for key, value in self.score.items():
+            print(key, "\t", value)
+
+
+class course(object):
+    cour_info = ["英语", "数学", "计算机", "政治", "哲学", "品德"]
+
+    @classmethod
+    def ShuffleCourse(cls):
+        random.shuffle(cls.cour_info)
+
+    @classmethod
+    def AddCourse(cls, new_course):
+        cls.cour_info.append(new_course)
+
+    @classmethod
+    def DelCourse(cls, old_course):
+        cls.cour_info.pop(old_course)
+
+    @classmethod
+    def OutputCourse(cls):
+        print("课程名: ", end=' ')
+        for item in cls.cour_info:
+            print(item, end=' ')
+        print("\n")
+
+
+course.ShuffleCourse()
+course.OutputCourse()
+s1 = Student("张三", "2021")
+n = int(input("请输入选课的门数:"))
+if n <= len(course.cour_info):
+    s1.choice(random.sample(course.cour_info, n))
+    s1.exam()
+    s1.OutputScore()
+else:
+    print("选课门数超过已有课程!")
+
+```
+
+### 第 7 章 图形用户界面设计
+
+#### 7.2 tkinter 模块介绍
+
+##### 7.2.1 标签和按钮组件
+
+> 例 7.1 在窗体中添加按钮和标签，单击按钮时从"学生成绩.csv"文件中读取学生考试成绩，并显示在标签上。
