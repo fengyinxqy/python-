@@ -52,6 +52,8 @@
     - [第 7 章 图形用户界面设计](#第-7-章-图形用户界面设计)
       - [7.2 tkinter 模块介绍](#72-tkinter-模块介绍)
         - [7.2.1 标签和按钮组件](#721-标签和按钮组件)
+        - [7.2.2 输入框组件](#722-输入框组件)
+        - [7.2.3 组件 Spinbox,OptionMenu,Text 和 Combobox](#723-组件-spinboxoptionmenutext-和-combobox)
 
 <!-- /TOC -->
 
@@ -2398,3 +2400,115 @@ else:
 ##### 7.2.1 标签和按钮组件
 
 > 例 7.1 在窗体中添加按钮和标签，单击按钮时从"学生成绩.csv"文件中读取学生考试成绩，并显示在标签上。
+
+```
+from tkinter import *
+root = Tk()
+root.title('学生成绩')
+root.geometry('300x450+100+100')
+
+
+def show():
+    with open('E:\Desktop\Python\python basis\Part7\文件\学生成绩.csv', "r", encoding="utf-8") as f:
+        lb.configure(text=f.read())
+
+
+lb = Label(root, text='', width=30, height=15, fg='purple', font=("黑体", 15))
+lb.pack()
+btn = Button(root, text="显示", command=show)
+btn.pack()
+root.mainloop()
+```
+
+知识点:
+
+1. 主窗体
+   1. 调用 Tk()方法初始化一个根窗体
+   2. 设置窗口标题
+      title()
+   3. 定义主窗体大小和位置
+      geometry('width x height +X+Y')方法可以设置窗体大小
+      width,height 指定宽高
+      X,Y 表示以屏幕左上角为顶点的窗体的坐标
+2. 标签组件
+   1. 创建标签组件
+      调用格式:
+      > label=Label(parent,option.....)
+   2. 显示标签组件
+      组件的布局一般由 pack(),grid(),place()三个函数。
+   3. 修改标签组件
+      建立标签组件后可以使用 configure 或 config 方法来修改文本，宽度，高度等。
+3. 按钮组件
+   > btn=Button(parent,option.....)
+4. 事件处理机制
+   事件源:能够产生事件的组件
+   事件:用户对组件的操作
+   事件监听器:接收事件，解释事件并处理事件
+   mainloop()作用就是进入到事件循环，一旦检测到事件就刷新组件
+
+##### 7.2.2 输入框组件
+
+> 例 7.2 在窗体中按照标签提示输入两个数字，求着两个数字的和并显示出来，单击清空按钮恢复初始状态
+
+```
+from tkinter import *
+root = Tk()
+root.title("计算两个数的和")
+root.geometry('400x180')
+
+
+def summation():
+    a = float(num1.get())
+    b = float(num2.get())
+    s = '%0.2f+%0.2f=%0.2f\n' % (a, b, a+b)
+    lb.configure(text=s)
+
+
+def clear():
+    num1.delete(0)
+    num2.delete(0)
+    lb.configure(text='请输入两个数，计算两个数的和')
+
+
+lb = Label(root, text='请输入两个数，计算两个数的和', font=('华文仿宋', 15))
+lb.grid(row=0, column=1, columnspan=3)
+lb1 = Label(root, text='请输入第一个数字', fg='blue', font=('华文仿宋', 12))
+lb1.grid(row=1, column=1)
+num1 = Entry(root)
+num1.grid(row=1, column=2)
+
+lb2 = Label(root, text='请输入第二个数字', fg='blue', font=('华文仿宋', 12))
+lb2.grid(row=2, column=1)
+num2 = Entry(root)
+num2.grid(row=2, column=2)
+
+btn1 = Button(root, text='求和', command=summation)
+btn1.grid(row=1, column=3, sticky=E)
+btn2 = Button(root, text='清空', command=clear)
+btn2.grid(row=2, column=3, sticky=E)
+
+
+root.mainloop()
+
+```
+
+知识点:
+
+1. 输入框:又称为文本框
+   1. 创建输入框组件
+      en=Entry(parent,.....)
+   2. 输入框组件选项
+      show='*'文字会以 *显示
+   3. 输入框常用函数和方法
+      delete()方法
+      > en.delete(first,last=None)，可以输出输入框中从 first 到 last(不包括)的值
+      > en.get()获取输入框中的值
+2. 组件布局 grid()函数
+   1. sticky:决定控件的贴靠方向
+   2. rowspan/columnspan:某个控件占的行数/列数，默认一行/列
+   3. ipadx/ipady:内边距
+   4. padx/pady:外边距
+
+##### 7.2.3 组件 Spinbox,OptionMenu,Text 和 Combobox
+
+> 例 7.3 通过选择年份、省份、民族等信息，从文件中查询招生人数,并显示相关信息
