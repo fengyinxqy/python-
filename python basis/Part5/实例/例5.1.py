@@ -1,0 +1,6 @@
+paper = open('first', 'x')
+paper.write("Welcome to Python File World!")
+paper.close()
+paper2 = open('first', 'r')
+hello = paper2.readline()
+print(hello)
