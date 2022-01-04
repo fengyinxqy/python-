@@ -11,11 +11,11 @@ class LoginPage(object):
         self.createPage()
     
     def loginCheck(self):
-        name=self.username.get()
-        password = self.password.get()
+        name='admin'
+        password = '123456'
         if self.isLegalUser(name,password):
             self.page.destroy()
-            mp.MainPage(self.root)
+            mp.MainPage(self.root,name)
         else:
             ms.showinfo(title='错误',message='账号或密码错误!')
             self.username.set("")
@@ -35,7 +35,7 @@ class LoginPage(object):
         self.page=tk.Frame(self.root)
         self.page.pack()
         tk.Label(self.page, text="  ").grid(row=0,sticky=tk.W,pady=10)
-        tk.Label(self.page, text="高考信息管理系统",font=('Helvetica 20bold'),background="white").grid(row=1, columnspan=2,sticky=tk.E+tk.W)
+        tk.Label(self.page, text="高考信息管理系统",font=('Helvetica 20 bold'),background="white").grid(row=1, columnspan=2,sticky=tk.E+tk.W)
         tk.Label(self.page, text="  ").grid(row=1,sticky=tk.W,pady=10)
         tk.Label(self.page, text="账号: ").grid(row=3, sticky=tk.E, pady=10)
         tk.Entry(self.page, textvariable=self.username).grid(row=3,column=1,sticky=tk.W)
