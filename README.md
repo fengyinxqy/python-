@@ -54,6 +54,9 @@
         - [7.2.1 标签和按钮组件](#721-标签和按钮组件)
         - [7.2.2 输入框组件](#722-输入框组件)
         - [7.2.3 组件 Spinbox,OptionMenu,Text 和 Combobox](#723-组件-spinboxoptionmenutext-和-combobox)
+        - [7.2.4 菜单](#724-菜单)
+        - [7.2.5 窗体](#725-窗体)
+      - [7.3 应用实例](#73-应用实例)
 
 <!-- /TOC -->
 
@@ -2512,3 +2515,300 @@ root.mainloop()
 ##### 7.2.3 组件 Spinbox,OptionMenu,Text 和 Combobox
 
 > 例 7.3 通过选择年份、省份、民族等信息，从文件中查询招生人数,并显示相关信息
+
+```
+from tkinter import ttk
+from tkinter import *
+import csv
+from typing import ValuesView
+final_list = []
+with open('C:/Users/PC/Desktop/Python/python/python basis/Part7/文件/招生人数.csv',
+          "r", encoding='utf-8')as f:
+    for line in f:
+        line = line.strip().split('\t')
+        final_list.append(line)
+final_list.pop(0)
+print(final_list)
+""" f = open('E:\Desktop\Python\python basis\Part7\文件\招生人数.csv',
+         "r", encoding='utf-8')
+csvreader = csv.reader(f).split('\t')
+final_list = list(csvreader)[1:] """
+root = Tk()
+root.geometry('600x300')
+lb1 = Label(root, text='选择查询条件', font=('华文仿宋', 15))
+lb1.place(relx=0.1, rely=0.1)
+
+
+def query():
+    year = spin.get()
+    major = var.get()
+    nation = comb.get()
+    selected = [x for x in final_list if x[0] ==
+                year and x[1] == major and x[2] == nation]
+    if selected:
+        text.insert(INSERT, year+'年'+major+'专业招收' +
+                    nation+'民族学生人数为: '+selected[0][3])
+    else:
+        text.insert(INSERT, "没有查询到结果!")
+
+
+def clear():
+    text.delete(1.0, END)
+
+
+spin = Spinbox(root, values=("2016", "2017", "2018", "2019", "2020"))
+spin.place(relx=0.1, rely=0.3, relwidth=0.25)
+comb = ttk.Combobox(root, value='汉族、蒙古族、回族、藏族、满族、维吾尔族、土家族、哈萨克族'.split('、'))
+comb.place(relx=0.1, rely=0.45, relwidth=0.25)
+comb.current(0)
+var = StringVar(root)
+var.set('专业')
+om = OptionMenu(root, var, *'哲学、经济学、法学、教育学、文学、历史学、理学、工学、管理学'.split('、'))
+om.place(relx=0.1, rely=0.6, relwidth=0.25)
+btn1 = Button(root, text='查询', command=query)
+btn1.place(relx=0.1, rely=0.8, relwidth=0.1, relheight=0.1)
+btn1 = Button(root, text='清空', command=clear)
+btn1.place(relx=0.25, rely=0.8, relwidth=0.1, relheight=0.1)
+lb2 = Label(root, text='结果', font=('华文仿宋', 15))
+text = Text(root, width=30, height=10)
+text.place(relx=0.5, rely=0.3)
+root.mainloop()
+
+```
+
+知识点:
+
+1. Spinbox 组件
+   1. 定义:是输入框的变体,用于从一些固定的之中选取一个
+   2. 如何获取值?
+      使用 get()方法
+2. OptionMenu 组件
+   1. 创建一个弹出菜单，有点像下拉菜单，但是有一个按钮，按按钮可以看到所有项
+      > 调用格式:OptionMenu(root,var,values)
+   2. 如何获取值?
+      使用 get()方法
+      要先定义一个变量，然后 set 一下再 get
+3. Text 组件
+   1. 用于显示和处理多行文本
+   2. 插入内容
+      insert()方法和 INSERT 或 END 索引号
+   3. 删除内容
+      delete()方法
+4. Combobox 组件
+
+   1. 定义 下拉列表
+   2. 如何使用？
+      from tkinter import ttk
+      > Combobox(parent,option,....)
+      > 设置值:value=''
+   3. 获取 get()
+
+5. 组件布局 place()函数
+   x/y 指定控件在窗口中的绝对 x/y 坐标
+   relx/rely 设置空间与主窗口的相对位置
+   relwidth/relheight 调整组件的相对大小
+
+##### 7.2.4 菜单
+
+> 【例 7.4】创建一个菜单栏，内有一个主菜单选项“文件”。“文件”菜单下有三个选项“导入数据”、“保存数据”和“退出”。单击“导入数据”，从文件中获取数据并显示。支持对数据进行修改，单击“保存数据”，将修改后的数据存入文件。单击“退出”退出整个菜单。
+
+```
+from os import write
+from tkinter import *
+import csv
+import tkinter.messagebox
+""" 导入数据 """
+def openfile():
+    csvreader=csv.reader(open('python\python basis\Part7\文件\招生人数.csv',encoding='utf-8'))
+    final_list=list(csvreader)
+    text.delete(1.0,END)
+    for i in range(0,len(final_list)):
+        text.insert(INSERT,final_list[i])
+        text.insert(INSERT,'\n')
+""" 保存数据 """
+def savefile():
+    text_content=[]
+    text_content=(text.get(1.0,END).replace(' ', ',')).split("\n")
+    text_content.pop()
+    text_content.pop()
+    new=[]
+    for el in text_content:
+        new.append(el.split(","))
+    with open('python\python basis\Part7\文件\招生人数.csv','w',newline='',encoding='utf-8') as t:
+        write=csv.writer(t)
+        write.writerows(new)
+        tkinter.messagebox.showinfo('通知','保存成功')
+
+""" 退出 """
+def ask():
+    if tkinter.messagebox.askokcancel('退出','确定退出吗?'):
+        root.destroy()
+
+root=Tk()
+root.title('菜单')
+root.geometry('600x500')
+mainmenu=Menu(root)
+menuFile=Menu(mainmenu)
+mainmenu.add_cascade(label='文件',menu=menuFile)
+mainmenu.add_command(label='导入数据',command=openfile)
+mainmenu.add_command(label='保存数据',command=savefile)
+menuFile.add_separator()
+menuFile.add_command(label='退出',command=ask)
+root['menu']=mainmenu
+s_x=Scrollbar(root)
+s_x.pack(side=RIGHT,fill=Y)
+s_y=Scrollbar(root,orient=HORIZONTAL)
+s_y.pack(side=BOTTOM,fill=X)
+text=Text(root,width=200,yscrollcommand=s_x.set,xscrollcommand=s_y.set,wrap='none')
+text.pack(expand=YES,fill=BOTH)
+s_x.config(command=text.yview)
+s_y.config(command=text.xview)
+root.mainloop()
+```
+
+知识点:
+
+1. 菜单组件
+   1. 创建菜单组件 使用 menu=Menu(parent,option.....)
+   2. 菜单的常用方法
+      add_cascade(option....)可以将下级菜单级联带指定的菜单项
+      add_separator()方法可以再菜单中添加分割线
+      add_command(option...)可以用来在菜单中添加菜单项
+2. 交互对话 在 message 模块中
+   > (<title=''>,<message=''>,option)
+   > 如 tkinter.messagebox.askokcancel('退出','确定退出吗?')
+3. 关闭窗体
+   使用 root.destroy()可以对窗体进行销毁
+4. 滚动条
+   创建:Scrollbar(option....)可以创建一个滚动条，需要指定父组件
+   绑定:将滚动条关联到文本框
+   > yscrollcommand=s_x.set
+   > xscrollcommand=s_y.set
+   > 将文本框关联到滚动条
+   > s_x.config(command=text.yview)
+   > s_y.config(command=text.xview)
+
+##### 7.2.5 窗体
+
+> 例 7.5 使用 Python 的 tkinter 模块，编程实现 BM1 指数计算器。身体质量指数（Body Mass Index，BMI）是国际上常用的衡量人体肥胖程度和是否健康的重要标准。肥胖程度的判断不能采用体重的绝对值，它与身高有关。因此，B 通过人体体重和身高两个数值获得相对客观的参数，并用这个参数所处范围衡量身体质量。BM 指数的计算公式如下：
+>
+> > BMI ＝体重（千克）/身高 2（厘米）
+> > 通过输人入身高和体重，可以计算出身体 BMI 指数，并且可以根据 BM 指数判断体重是否处于正常范围。
+
+```
+<!-- main.py -->
+from tkinter import *
+from LoginPage import *
+root = Tk()
+root.title('计算BMI指数')
+LoginPage(root)
+root.mainloop()
+
+<!-- LoginPage.py -->
+from tkinter import *
+from tkinter.messagebox import *
+from MainPage import *
+class LoginPage(object):
+    def __init__(self,master=None):
+        self.root = master
+        self.root.geometry('%dx%d'%(500,300))
+        self.username=StringVar()
+        self.password = StringVar()
+        self.createPage()
+
+    def createPage(self):
+        Label(self.root,text='计算BMI指数',bg='#d3fbfb',fg='red',font=('宋体',25),relief=SUNKEN).pack(fill=X)
+        self.page=Frame(self.root)
+        self.page.pack()
+        Label(self.page, text='账号: ',font=('宋体',12)).grid(row=2,sticky=W,pady=10)
+        Entry(self.page,textvariable=self.username).grid(row=2,column=1,sticky=E)
+        Label(self.page, text='密码: ',font=('宋体',12)).grid(row=4,sticky=W,pady=10)
+        Entry(self.page,textvariable=self.password,show='*').grid(row=4,column=1,sticky=E)
+        Button(self.page, text='登录',font=('宋体',10),command=self.loginCheck).grid(row=6,sticky=W,pady=10)
+        Button(self.page, text='退出',font=('宋体',10),command=self.root.destroy).grid(row=6,column=1,sticky=E)
+
+    def loginCheck(self):
+        name=self.username.get()
+        password = self.password.get()
+        if self.isLegalUser(name,password):
+            self.page.destroy()
+            MainPage(self.root)
+        else:
+            showinfo(title='错误',message='账号或密码错误!')
+            self.username.set("")
+            self.password.set("")
+    def isLegalUser(self, name, password):
+        with open('python\python basis\Part7\文件\账号密码.txt',"r",encoding="utf-8")as f:
+            for line in f.readlines():
+                info=line[:-1].split(",")
+                if len(info)<2:
+                    break
+                if info[0].strip()==name and info[1].strip() ==password:
+                    f.close()
+                    return True
+        return False
+
+<!-- MainPage.py -->
+from tkinter import *
+class MainPage(object):
+    def __init__(self,master=None):
+        self.root = master
+        self.root.geometry('%dx%d'%(500,300))
+        self.entry_height=StringVar()
+        self.entry_weight = StringVar()
+        self.Bmi1=StringVar()
+        self.Bmi2 = StringVar()
+        self.createPage()
+
+    def createPage(self):
+        self.main=Frame(self.root)#创建Frame
+        self.main.pack()
+        #设置身高标签和输入框
+        Label(self.main,text='身高(cm)',font=('隶书,18')).grid(row=2,column=1,sticky=W,pady=2)
+        Entry(self.main,textvariable=self.entry_height,font=('隶书,18')).grid(row=2,column=3,sticky=W,pady=2)
+        #设置体重标签和输入框
+        Label(self.main,text='体重(kg)',font=('隶书,18')).grid(row=3,column=1,sticky=W,pady=2)
+        Entry(self.main,textvariable=self.entry_weight,font=('隶书,18')).grid(row=3,column=3,sticky=W,pady=2)
+        Button(self.main, text='计算BMI指数',font=('隶书',14),command=self.bmi).grid(row=4, column=1, rowspan=2,columnspan=2)
+        Button(self.main, text='清空',font=('隶书',14),command=self.clear).grid(row=4, column=3, rowspan=2, columnspan=2)
+        #添加显示结果的输入框
+        Entry(self.main, textvariable=self.Bmi1,font=('隶书',18)).grid(row=7, column=1, rowspan=2, columnspan=3)
+        Entry(self.main, textvariable=self.Bmi2,font=('隶书',18)).grid(row=10, column=1, rowspan=2, columnspan=3)
+    def bmi(self):
+        bmi_set=round(float(self.entry_weight.get())/(float(self.entry_height.get())*float(self.entry_height.get()))*10000,2)
+        if bmi_set<18.5:
+            state=('过轻')
+        elif 18.5<=bmi_set<25:
+            state=('正常')
+        elif 25<=bmi_set<28:
+            state=('过重')
+        elif 28 <= bmi_set <32:
+            state=('肥胖')
+        else:
+          state = ('严重肥胖')
+        BMI_result=('您的BMI为: ',bmi_set)
+        BMI_state=('您的体型属于: ',state)
+        self.Bmi1.set(BMI_result)
+        self.Bmi2.set(BMI_state)
+    def clear(self):
+        self.entry_height.set("")
+        self.entry_weight.set("")
+        self.Bmi1.set("")
+        self.Bmi2.set("")
+
+```
+
+知识点:
+
+1. 窗体的创建
+   在 tkinter 中，Frame 类表示窗体
+2. 窗体的切换
+   调用 tkinter.destory()方法销毁界面然后生成新界面
+
+#### 7.3 应用实例
+
+> 使用面向对象方式编程实现招生人数查询系统（见图 7-6）。使用账户、密码登录系统，如果输入账户、密码合法，则登录系统并弹出新窗体，否则弹出错误对话框。在新窗体上有主菜单项：文件、处理和退出。在打开页面中可以打开数据文件并对其进行修改和保存；“处理”下拉列表包括“插入”和“删除”，可以增加或者删除数据；单击“退出”可退出系统。
+
+```
+代码在文件夹 python\python basis\Part7\实例\应用实例
+```
