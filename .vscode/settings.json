@@ -2,5 +2,6 @@
     "workbench.colorCustomizations": {
 
     },
-    "editor.suggest.snippetsPreventQuickSuggestions": false
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "jupyter.jupyterServerType": "local"
 }

@@ -31,7 +31,7 @@ class LoginPage(object):
             self.username.set("")
             self.password.set("")
     def isLegalUser(self, name, password):
-        with open('python\python basis\Part7\文件\账号密码.txt',"r",encoding="utf-8")as f:
+        with open('python basis\Part7\文件\账号密码.txt',"r",encoding="utf-8")as f:
             for line in f.readlines():
                 info=line[:-1].split(",")
                 if len(info)<2:
